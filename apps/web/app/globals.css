@@ -1,0 +1,164 @@
+:root {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --panel: #151b23;
+  --line: #30363d;
+  --text: #f0f6fc;
+  --muted: #8b949e;
+  --brand: #2f81f7;
+  --accent: #3fb950;
+  --danger: #f85149;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 6px;
+  background: var(--brand);
+  color: white;
+  cursor: pointer;
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+button.secondary {
+  background: #21262d;
+  border: 1px solid var(--line);
+}
+
+input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #0d1117;
+  color: var(--text);
+  min-height: 40px;
+  padding: 0 12px;
+}
+
+.shell {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.home {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.headline {
+  padding-top: 72px;
+}
+
+.headline h1 {
+  font-size: clamp(42px, 7vw, 84px);
+  line-height: 0.96;
+  margin: 0 0 20px;
+}
+
+.headline p,
+.muted {
+  color: var(--muted);
+}
+
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+.auth {
+  padding: 18px;
+}
+
+.room {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 16px;
+}
+
+.theater {
+  display: grid;
+  gap: 12px;
+}
+
+.video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: black;
+  border-radius: 8px;
+}
+
+.toolbar,
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.side {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.chat {
+  height: 280px;
+  overflow: auto;
+  padding: 12px;
+}
+
+.chat p {
+  margin: 0 0 10px;
+}
+
+.peers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.peers video {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #010409;
+  border-radius: 6px;
+}
+
+@media (max-width: 880px) {
+  .home,
+  .room {
+    grid-template-columns: 1fr;
+  }
+
+  .headline {
+    padding-top: 20px;
+  }
+}
+

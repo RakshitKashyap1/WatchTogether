@@ -1,0 +1,21 @@
+{
+  "name": "watchtogether",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w apps/server\" \"npm run dev -w apps/web\"",
+    "dev:web": "npm run dev -w apps/web",
+    "dev:server": "npm run dev -w apps/server",
+    "start:web": "npm run start -w apps/web",
+    "start:server": "npm run start -w apps/server",
+    "build": "npm run build -w apps/server && npm run build -w apps/web",
+    "lint": "npm run lint -w apps/web",
+    "db:apply": "node scripts/apply-schema.mjs",
+    "check:services": "node scripts/check-services.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

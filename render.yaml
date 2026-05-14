@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: watchtogether-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile.server
+    healthCheckPath: /api/health/ready
+    disk:
+      name: watchtogether-media
+      mountPath: /data
+      sizeGB: 10
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_URLS
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: MEDIA_ROOT
+        value: /data/media
+      - key: UPLOAD_ROOT
+        value: /data/uploads
+
+  - type: web
+    name: watchtogether-web
+    runtime: docker
+    dockerfilePath: ./Dockerfile.web
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+      - key: NEXT_PUBLIC_SOCKET_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
