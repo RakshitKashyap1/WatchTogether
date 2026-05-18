@@ -26,7 +26,7 @@ export function registerSocketHandlers(io: Server) {
   io.on("connection", (socket) => {
     socket.on("room:join", async (roomId: string) => {
       const peers = await io.in(roomId).fetchSockets();
-      socket.join(roomId);
+      await socket.join(roomId);
       socket.emit(
         "room:peers",
         peers.map((peer) => ({ socketId: peer.id, user: peer.data.user }))

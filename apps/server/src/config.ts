@@ -29,7 +29,7 @@ export function validateRuntimeConfig() {
   const missing = [];
   if (!config.databaseUrl) missing.push("DATABASE_URL");
   if (!config.upstashRedisRestUrl && !config.redisUrl) missing.push("UPSTASH_REDIS_REST_URL or REDIS_URL");
-  if (!config.upstashRedisRestToken && !config.redisUrl) missing.push("UPSTASH_REDIS_REST_TOKEN");
+  if (!config.upstashRedisRestToken && !config.redisUrl) missing.push("UPSTASH_REDIS_REST_TOKEN (or use REDIS_URL instead)");
   if (config.nodeEnv === "production" && config.jwtSecret === "dev-secret-change-me") missing.push("JWT_SECRET");
   if (config.nodeEnv === "production" && !config.supabaseUrl) missing.push("SUPABASE_URL");
   if (config.nodeEnv === "production" && !config.supabaseAnonKey) missing.push("SUPABASE_ANON_KEY");

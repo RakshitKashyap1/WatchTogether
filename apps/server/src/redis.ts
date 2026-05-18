@@ -7,15 +7,15 @@ type RedisClient = {
   set(key: string, value: string, options: { ex: number }): Promise<unknown>;
 };
 
-const upstash =
-  config.upstashRedisRestUrl && config.upstashRedisRestToken
-    ? new UpstashRedis({
-        url: config.upstashRedisRestUrl,
-        token: config.upstashRedisRestToken
-      })
-    : null;
+const hasUpstash = config.upstashRedisRestUrl && config.upstashRedisRestToken;
+const upstash = hasUpstash
+  ? new UpstashRedis({
+      url: config.upstashRedisRestUrl,
+      token: config.upstashRedisRestToken
+    })
+  : null;
 
-const socketRedis = config.redisUrl ? new Redis(config.redisUrl) : null;
+const socketRedis = !hasUpstash && config.redisUrl ? new Redis(config.redisUrl) : null;
 
 export const redis: RedisClient | null = upstash
   ? {
