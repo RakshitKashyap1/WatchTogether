@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { Github, LogIn, UserPlus, Video } from "lucide-react";
 import { api, saveSession } from "../../lib/api";
-import { isSupabaseConfigured, supabase } from "../../lib/supabase";
+import { getSupabaseClient } from "../../lib/supabase";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("host@example.com");
@@ -17,7 +17,8 @@ export default function LoginPage() {
     event.preventDefault();
     setError("");
     try {
-      if (!isSupabaseConfigured || !supabase) {
+      const supabase = await getSupabaseClient();
+      if (!supabase) {
         setError("Supabase Auth is not configured yet. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
         return;
       }
@@ -59,7 +60,8 @@ export default function LoginPage() {
   }
 
   async function signInWithGoogle() {
-    if (!isSupabaseConfigured || !supabase) {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
       setError("Supabase Auth is not configured yet. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
       return;
     }
@@ -74,7 +76,8 @@ export default function LoginPage() {
   }
 
   async function signInWithGithub() {
-    if (!isSupabaseConfigured || !supabase) {
+    const supabase = await getSupabaseClient();
+    if (!supabase) {
       setError("Supabase Auth is not configured yet. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
       return;
     }

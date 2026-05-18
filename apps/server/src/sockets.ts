@@ -11,12 +11,12 @@ type PlaybackEvent = {
 };
 
 export function registerSocketHandlers(io: Server) {
-  io.use((socket, next) => {
+  io.use(async (socket, next) => {
     const token = socket.handshake.auth.token;
     if (typeof token !== "string") return next(new Error("Missing auth token"));
 
     try {
-      socket.data.user = verifySocketToken(token);
+      socket.data.user = await verifySocketToken(token);
       next();
     } catch {
       next(new Error("Invalid auth token"));

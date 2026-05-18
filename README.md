@@ -20,7 +20,7 @@ npm install
 ```
 
 3. Apply `supabase/schema.sql` to your Supabase/PostgreSQL database.
-4. Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `SUPABASE_JWT_SECRET`.
+4. Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_URL`, and `SUPABASE_ANON_KEY`.
 5. Make sure `ffmpeg` is available on your PATH.
 6. Run both apps:
 

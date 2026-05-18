@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { api, saveSession } from "../../../lib/api";
-import { isSupabaseConfigured, supabase } from "../../../lib/supabase";
+import { getSupabaseClient } from "../../../lib/supabase";
 
 export default function LoginCallbackPage() {
   const [message, setMessage] = useState("Finishing login...");
 
   useEffect(() => {
     async function finishLogin() {
-      if (!isSupabaseConfigured || !supabase) {
+      const supabase = await getSupabaseClient();
+      if (!supabase) {
         setMessage("Supabase Auth is not configured yet.");
         return;
       }

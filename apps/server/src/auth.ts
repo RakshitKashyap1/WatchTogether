@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { config } from "./config.js";
 import { query } from "./db.js";
@@ -20,6 +21,14 @@ declare global {
   }
 }
 
+const supabase = config.supabaseUrl && config.supabaseAnonKey
+  ? createClient(config.supabaseUrl, config.supabaseAnonKey, {
+      auth: {
+        persistSession: false
+      }
+    })
+  : null;
+
 const authSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
@@ -30,32 +39,24 @@ function sign(user: AuthUser) {
   return jwt.sign(user, config.jwtSecret, { expiresIn: "7d" });
 }
 
-type SupabaseJwt = {
-  sub: string;
-  email?: string;
-  user_metadata?: {
-    display_name?: string;
-    full_name?: string;
-    name?: string;
-  };
-};
-
 function displayNameFromEmail(email: string) {
   return email.split("@")[0] || "Guest";
 }
 
-function userFromSupabaseToken(token: string): AuthUser {
-  if (!config.supabaseJwtSecret) throw new Error("SUPABASE_JWT_SECRET is not configured");
+async function userFromSupabaseToken(token: string): Promise<AuthUser> {
+  if (!supabase) throw new Error("Supabase Auth is not configured");
 
-  const decoded = jwt.verify(token, config.supabaseJwtSecret) as SupabaseJwt;
-  const email = decoded.email ?? `${decoded.sub}@supabase.local`;
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data.user) throw error ?? new Error("Invalid Supabase token");
+
+  const email = data.user.email ?? `${data.user.id}@supabase.local`;
   return {
-    id: decoded.sub,
+    id: data.user.id,
     email,
     displayName:
-      decoded.user_metadata?.display_name ??
-      decoded.user_metadata?.full_name ??
-      decoded.user_metadata?.name ??
+      (data.user.user_metadata.display_name as string | undefined) ??
+      (data.user.user_metadata.full_name as string | undefined) ??
+      (data.user.user_metadata.name as string | undefined) ??
       displayNameFromEmail(email),
     provider: "supabase"
   };
@@ -65,10 +66,10 @@ function userFromLocalToken(token: string): AuthUser {
   return { ...(jwt.verify(token, config.jwtSecret) as AuthUser), provider: "local" };
 }
 
-function verifyAnyToken(token: string): AuthUser {
-  if (config.supabaseJwtSecret) {
+async function verifyAnyToken(token: string): Promise<AuthUser> {
+  if (supabase) {
     try {
-      return userFromSupabaseToken(token);
+      return await userFromSupabaseToken(token);
     } catch {
       // Keep older local development tokens usable while migrating to Supabase Auth.
     }
@@ -124,7 +125,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
   if (!token) return res.status(401).json({ error: "Missing token" });
 
   try {
-    req.user = verifyAnyToken(token);
+    req.user = await verifyAnyToken(token);
     await upsertUserProfile(req.user);
     next();
   } catch {
@@ -141,6 +142,6 @@ export async function syncAuthUser(req: Request, res: Response) {
   res.json({ user: req.user });
 }
 
-export function verifySocketToken(token: string): AuthUser {
+export async function verifySocketToken(token: string): Promise<AuthUser> {
   return verifyAnyToken(token);
 }

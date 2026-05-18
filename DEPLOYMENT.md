@@ -24,7 +24,8 @@ NODE_ENV=production
 PORT=4000
 CLIENT_URLS=https://your-web-domain.example
 JWT_SECRET=long-random-secret
-SUPABASE_JWT_SECRET=your-supabase-auth-jwt-secret
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_ANON_KEY=your-supabase-anon-key
 DATABASE_URL=postgresql://postgres.project-ref:password@aws-region.pooler.supabase.com:6543/postgres
 UPSTASH_REDIS_REST_URL=https://your-upstash-endpoint.upstash.io
 UPSTASH_REDIS_REST_TOKEN=your-token
@@ -59,7 +60,8 @@ https://your-web-domain.example/login/callback
 ```bash
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
-SUPABASE_JWT_SECRET
+SUPABASE_URL
+SUPABASE_ANON_KEY
 ```
 
 The frontend uses Supabase Auth for login/signup/OAuth. The backend verifies Supabase JWTs and syncs users into the `public.users` profile table used by rooms and chat.
