@@ -2,7 +2,7 @@ import "dotenv/config";
 import fs from "node:fs/promises";
 import pg from "pg";
 
-const sql = await fs.readFile("supabase/schema.sql", "utf8");
+const sql = await fs.readFile("db/schema.sql", "utf8");
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }

@@ -6,9 +6,8 @@ Real-time synchronized movie streaming with video/audio chat.
 
 - `apps/web`: Next.js app with Socket.IO client and WebRTC peer chat
 - `apps/server`: Express API, Socket.IO room sync, JWT auth, FFmpeg HLS transcoding
-- PostgreSQL/Supabase: users, rooms, memberships, chat history, media metadata
+- PostgreSQL: users, rooms, memberships, chat history, media metadata
 - Redis/Upstash: hot playback state cache
-- Supabase Auth: email/password and OAuth login with JWT verification
 
 ## Quick Start
 
@@ -19,10 +18,9 @@ Real-time synchronized movie streaming with video/audio chat.
 npm install
 ```
 
-3. Apply `supabase/schema.sql` to your Supabase/PostgreSQL database.
-4. Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_URL`, and `SUPABASE_ANON_KEY`.
-5. Make sure `ffmpeg` is available on your PATH.
-6. Run both apps:
+3. Apply `db/schema.sql` to your PostgreSQL database.
+4. Make sure `ffmpeg` is available on your PATH.
+5. Run both apps:
 
 ```bash
 npm run dev

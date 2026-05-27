@@ -14,8 +14,6 @@ export const config = {
   clientUrl: clientUrls[0] ?? "http://localhost:3000",
   clientUrls,
   jwtSecret: process.env.JWT_SECRET ?? "dev-secret-change-me",
-  supabaseUrl: process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-  supabaseAnonKey: process.env.SUPABASE_ANON_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
   databaseUrl: process.env.DATABASE_URL ?? "",
   redisUrl: process.env.REDIS_URL ?? "",
   upstashRedisRestUrl: process.env.UPSTASH_REDIS_REST_URL ?? "",
@@ -31,8 +29,6 @@ export function validateRuntimeConfig() {
   if (!config.upstashRedisRestUrl && !config.redisUrl) missing.push("UPSTASH_REDIS_REST_URL or REDIS_URL");
   if (!config.upstashRedisRestToken && !config.redisUrl) missing.push("UPSTASH_REDIS_REST_TOKEN (or use REDIS_URL instead)");
   if (config.nodeEnv === "production" && config.jwtSecret === "dev-secret-change-me") missing.push("JWT_SECRET");
-  if (config.nodeEnv === "production" && !config.supabaseUrl) missing.push("SUPABASE_URL");
-  if (config.nodeEnv === "production" && !config.supabaseAnonKey) missing.push("SUPABASE_ANON_KEY");
 
   if (missing.length > 0) {
     throw new Error(`Missing required environment variables: ${missing.join(", ")}`);
