@@ -65,7 +65,11 @@ export default function RoomClient({ slug }: { slug: string }) {
       const video = videoRef.current;
       if (!video) return;
       if (Math.abs(video.currentTime - position) > 1.2) video.currentTime = position;
-      paused ? video.pause() : video.play();
+      if (paused) {
+        video.pause();
+      } else {
+        video.play().catch(() => {});
+      }
     });
 
     socket.on("webrtc:offer", async ({ from, offer }) => {
@@ -88,7 +92,9 @@ export default function RoomClient({ slug }: { slug: string }) {
     const playback = roomData?.playback;
     if (!video || !playback) return;
     video.currentTime = playback.position;
-    if (!playback.paused) void video.play();
+    if (!playback.paused) {
+      video.play().catch(() => {});
+    }
   }, [roomData?.playback]);
 
   useEffect(() => {
