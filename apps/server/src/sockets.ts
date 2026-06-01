@@ -41,11 +41,14 @@ export function registerSocketHandlers(io: Server) {
     });
 
     socket.on("chat:send", async ({ roomId, body }: { roomId: string; body: string }) => {
+      const trimmed = body.trim().slice(0, 1000);
+      if (!trimmed) return;
+
       const [message] = await query<{ id: string; body: string; created_at: string }>(
         `insert into chat_messages (room_id, user_id, body)
          values ($1, $2, $3)
          returning id, body, created_at`,
-        [roomId, socket.data.user.id, body]
+        [roomId, socket.data.user.id, trimmed]
       );
       io.to(roomId).emit("chat:message", { ...message, display_name: socket.data.user.displayName });
     });
