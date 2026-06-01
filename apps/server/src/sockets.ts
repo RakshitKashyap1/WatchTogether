@@ -61,5 +61,13 @@ export function registerSocketHandlers(io: Server) {
     socket.on("webrtc:ice-candidate", ({ targetId, candidate }) => {
       socket.to(targetId).emit("webrtc:ice-candidate", { from: socket.id, candidate });
     });
+
+    socket.on("disconnect", () => {
+      for (const roomId of socket.rooms) {
+        if (roomId !== socket.id) {
+          socket.to(roomId).emit("presence:left", { socketId: socket.id, user: socket.data.user });
+        }
+      }
+    });
   });
 }

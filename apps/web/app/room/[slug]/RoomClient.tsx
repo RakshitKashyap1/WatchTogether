@@ -60,6 +60,9 @@ export default function RoomClient({ slug }: { slug: string }) {
     socket.on("presence:joined", ({ socketId }: { socketId: string }) =>
       setPeers((items) => (items.includes(socketId) ? items : [...items, socketId]))
     );
+    socket.on("presence:left", ({ socketId }: { socketId: string }) =>
+      setPeers((items) => items.filter((id) => id !== socketId))
+    );
     socket.on("chat:message", (message: ChatMessage) => setMessages((items) => [...items, message]));
     socket.on("playback:update", ({ position, paused }: { position: number; paused: boolean }) => {
       const video = videoRef.current;
