@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import express from "express";
@@ -126,6 +127,7 @@ router.post("/rooms/:roomId/media", requireAuth, upload.single("movie"), async (
   if (room.host_user_id !== req.user!.id) return res.status(403).json({ error: "Only the host can upload media" });
 
   const result = await transcodeToHls(req.file.path, room.id);
+  fs.unlink(req.file.path, () => {});
   const media = await createMediaRecord({
     id: result.mediaId,
     roomId: room.id,
