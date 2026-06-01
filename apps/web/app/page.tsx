@@ -2,12 +2,21 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { LogIn, Plus, Video } from "lucide-react";
-import { api, token } from "../lib/api";
+import { LogIn, LogOut, Plus, User, Video } from "lucide-react";
+import { api, clearSession, token, User as UserType } from "../lib/api";
 
 export default function HomePage() {
   const [roomTitle, setRoomTitle] = useState("Friday Movie Night");
   const [error, setError] = useState("");
+
+  const userJson = typeof window !== "undefined" ? window.localStorage.getItem("watchtogether:user") : null;
+  const currentUser: UserType | null = userJson ? JSON.parse(userJson) : null;
+  const isLoggedIn = Boolean(token() && currentUser);
+
+  function logout() {
+    clearSession();
+    window.location.href = "/";
+  }
 
   async function createRoom(event: FormEvent) {
     event.preventDefault();
@@ -46,9 +55,21 @@ export default function HomePage() {
             <Plus size={16} /> Create room
           </button>
         </form>
-        <Link className="row muted" href="/login">
-          <LogIn size={16} /> Login or create account
-        </Link>
+
+        {isLoggedIn ? (
+          <div className="stack">
+            <div className="row" style={{ opacity: 0.7, fontSize: 14 }}>
+              <User size={14} /> {currentUser!.displayName} ({currentUser!.email})
+            </div>
+            <button className="secondary" type="button" onClick={logout}>
+              <LogOut size={16} /> Logout
+            </button>
+          </div>
+        ) : (
+          <Link className="row muted" href="/login">
+            <LogIn size={16} /> Login or create account
+          </Link>
+        )}
         {error && <p className="muted">{error}</p>}
       </section>
     </main>
