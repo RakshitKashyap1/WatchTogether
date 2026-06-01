@@ -13,7 +13,10 @@
     "build": "npm run build -w apps/server && npm run build -w apps/web",
     "lint": "npm run lint -w apps/web",
     "db:apply": "node scripts/apply-schema.mjs",
-    "check:services": "node scripts/check-services.mjs"
+    "check:services": "node scripts/check-services.mjs",
+    "test": "npm run test -w apps/server && npm run test -w apps/web",
+    "test:server": "npm run test -w apps/server",
+    "test:web": "npm run test -w apps/web"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
