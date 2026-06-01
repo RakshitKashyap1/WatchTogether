@@ -40,6 +40,10 @@ export default function RoomClient({ slug }: { slug: string }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!token()) {
+      window.location.href = "/login";
+      return;
+    }
     api<RoomPayload>(`/api/rooms/${slug}`)
       .then((payload) => {
         setRoomData(payload);
@@ -188,7 +192,11 @@ export default function RoomClient({ slug }: { slug: string }) {
   }
 
   if (!roomData) {
-    return <main className="shell">{error || "Loading room..."}</main>;
+    return (
+      <main className="shell" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <p className="muted">{error || "Loading room..."}</p>
+      </main>
+    );
   }
 
   return (

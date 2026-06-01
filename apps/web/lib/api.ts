@@ -29,6 +29,11 @@ export async function api<T>(path: string, init: RequestInit = {}) {
   if (authToken) headers.set("authorization", `Bearer ${authToken}`);
 
   const response = await fetch(`${API_URL}${path}`, { ...init, headers });
+  if (response.status === 401 && typeof window !== "undefined") {
+    clearSession();
+    window.location.href = "/login";
+    throw new Error("Session expired");
+  }
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload.error ?? "Request failed");
   return payload as T;
