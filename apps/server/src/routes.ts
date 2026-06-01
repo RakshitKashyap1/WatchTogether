@@ -52,7 +52,7 @@ router.get("/health/ready", async (_req, res) => {
     checks.redis = "failed";
   }
 
-  const ok = checks.postgres === "ok" && checks.redis === "ok";
+  const ok = checks.postgres === "ok" && (checks.redis === "ok" || checks.redis === "disabled");
   res.status(ok ? 200 : 503).json({ ok, checks });
 });
 router.post("/auth/register", register);
