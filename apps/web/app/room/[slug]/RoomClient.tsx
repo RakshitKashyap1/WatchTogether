@@ -153,7 +153,13 @@ export default function RoomClient({ slug }: { slug: string }) {
     socket.emit("webrtc:offer", { roomId: roomData.room.id, targetId, offer });
   }
 
+  const broadcastRef = useRef(0);
+
   function broadcastPlayback(paused: boolean) {
+    const now = Date.now();
+    if (now - broadcastRef.current < 300) return;
+    broadcastRef.current = now;
+
     const video = videoRef.current;
     if (!video || !roomData) return;
     socketRef.current?.emit("playback:update", {
